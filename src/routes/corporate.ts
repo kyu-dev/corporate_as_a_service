@@ -10,3 +10,8 @@ corporate.get("/", (c) => {
     ];
   return c.json({ message: result });
 });
+
+corporate.get("/all", (c) => {
+  const result = corporateData.phrases;
+  return c.json({ message: result });
+});
