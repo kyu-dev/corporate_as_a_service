@@ -2,17 +2,25 @@
 
 > _"L'objectif est d'optimiser la scalabilité des flux opérationnels transversaux dans une logique holistique."_
 
-Une API REST satirique qui génère du jargon corporate et des messages de licenciement à la demande. Parfait pour vos présentations PowerPoint, vos meetings de 2h qui auraient pu être un email, ou simplement pour impressionner vos collègues avec des phrases vides de sens.
+Une API REST satirique extensible qui génère du contenu corporate à la demande. Parfait pour vos présentations PowerPoint, vos meetings de 2h qui auraient pu être un email, ou simplement pour impressionner vos collègues avec des phrases sophistiquées.
 
 ## 🚀 Fonctionnalités
 
-- **🎯 Jargon Corporate**: Génération de phrases corporate sophistiquées et vides de sens
+- **🎯 Générateur de Contenu**: Collection de phrases et expressions thématiques
 - **⚡ API Ultra-rapide**: Propulsée par Hono.js et Cloudflare Workers
-- **🎲 Aléatoire**: Chaque requête retourne une phrase différente
-- **📚 Collection complète**: Accès à toute la base de données de phrases
+- **🎲 Aléatoire**: Chaque requête retourne un contenu différent
+- **📚 Collections complètes**: Accès à toutes les bases de données
+- **🔧 Extensible**: Architecture modulaire pour ajouter facilement de nouveaux thèmes
 
-## 🌐 Endpoints
+## 🌐 API Base URL
+
+```
 https://api.corporate-as-a-service.workers.dev
+```
+
+## 📋 Endpoints Disponibles
+
+> Chaque thème suit le même pattern : `/{theme}` pour un élément aléatoire et `/{theme}/all` pour la collection complète
 
 ### Corporate Speak
 
@@ -28,23 +36,22 @@ GET /layoff        # Message de licenciement aléatoire
 GET /layoff/all    # Tous les messages de licenciement
 ```
 
-## 📋 Exemples de Réponses
+_D'autres thèmes peuvent être ajoutés facilement en suivant la même structure..._
 
-### Corporate Speak
+## 🔄 Format de Réponse
 
-```json
-{
-  "message": "Nous devons catalyser les synergies intersectorielles afin de maximiser notre proposition de valeur à 360 degrés."
-}
-```
-
-### Layoff Messages
+Toutes les routes retournent le même format JSON standardisé :
 
 ```json
 {
-  "message": "Nous entamons une transition stratégique dans laquelle votre rôle n'est plus aligné avec notre vision à long terme."
+  "message": "Contenu généré selon le thème demandé"
 }
 ```
+
+**Exemples :**
+
+- Corporate: _"Nous devons catalyser les synergies intersectorielles..."_
+- Layoff: _"Nous entamons une transition stratégique dans laquelle..."_
 
 ## 🛠️ Technologies
 
@@ -86,45 +93,94 @@ pnpm deploy
 
 ```
 ├── src/
-│   ├── index.ts          # Point d'entrée principal
-│   └── routes/
-│       ├── corporate.ts  # Routes pour le jargon corporate
-│       └── layoff.ts     # Routes pour les messages de licenciement
-├── public/
-│   ├── corporate.json    # Base de données des phrases corporate
-│   └── layoff.json       # Base de données des messages de licenciement
-├── package.json
+│   ├── index.ts          # Point d'entrée et configuration des routes
+│   └── routes/           # Modules de routes par thème
+│       └── *.ts          # Chaque fichier gère un thème spécifique
+├── public/               # Base de données JSON
+│   └── *.json           # Collections de phrases par thème
+├── package.json          # Configuration du projet
 ├── wrangler.jsonc        # Configuration Cloudflare Workers
-└── tsconfig.json
+└── tsconfig.json         # Configuration TypeScript
 ```
+
+> **Architecture modulaire** : Chaque nouveau thème nécessite seulement un fichier de route et un fichier JSON correspondant.
 
 ## 🎭 Cas d'Usage
 
-- **Présentations d'entreprise** : Ajoutez une dose de sophistication vide à vos slides
-- **Générateur de texte** : Pour vos applications de génération de contenu
-- **Formation** : Sensibilisez vos équipes aux travers du langage corporate
-- **Humour** : Créez des bots ou des applications amusantes
-- **Tests d'API** : Utilisez comme service de test pour vos applications
+- **🎨 Générateur de Contenu** : Alimentez vos applications avec du contenu thématique
+- **📊 Présentations & Meetings** : Ajoutez une touche d'authenticité corporate
+- **🎓 Formation & Sensibilisation** : Illustrez les travers de la communication d'entreprise
+- **🤖 Bots & Applications** : Intégrez facilement dans vos projets créatifs
+- **🧪 Tests & Développement** : Service de données mock pour vos tests d'API
+- **🎪 Divertissement** : Créez des expériences amusantes et satiriques
+
+## 🔧 Développement
+
+### Ajouter un Nouveau Thème
+
+1. **Créer le fichier JSON** dans `public/` :
+
+   ```json
+   {
+     "phrases": ["Votre première phrase...", "Votre deuxième phrase..."]
+   }
+   ```
+
+2. **Créer la route** dans `src/routes/` :
+
+   ```typescript
+   import { Hono } from "hono";
+   import themeData from "../../public/votre-theme.json";
+
+   export const votreTheme = new Hono();
+
+   votreTheme.get("/", (c) => {
+     const result =
+       themeData.phrases[Math.floor(Math.random() * themeData.phrases.length)];
+     return c.json({ message: result });
+   });
+
+   votreTheme.get("/all", (c) => {
+     return c.json({ message: themeData.phrases });
+   });
+   ```
+
+3. **Importer dans `index.ts`** :
+
+   ```typescript
+   import { votreTheme } from "./routes/votre-theme";
+   app.route("/votre-theme", votreTheme);
+   ```
+
+### Enrichir un Thème Existant
+
+Modifiez simplement les fichiers JSON dans `public/` pour ajouter de nouvelles phrases à vos collections.
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
+Les contributions sont les bienvenues ! L'architecture modulaire facilite l'ajout de nouveaux thèmes et fonctionnalités.
 
-1. Forker le projet
-2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/nouvelle-fonctionnalite`)
-3. Commiter vos changements (`git commit -m 'Ajouter une nouvelle fonctionnalité'`)
-4. Pusher vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
-5. Ouvrir une Pull Request
+### Comment Contribuer
 
-### Ajouter de nouvelles phrases
+1. **Fork** le projet
+2. **Créer une branche** pour votre fonctionnalité (`git checkout -b feature/nouveau-theme`)
+3. **Développer** votre ajout (voir section "Ajouter un Nouveau Thème")
+4. **Commiter** vos changements (`git commit -m 'Ajouter le thème XYZ'`)
+5. **Pusher** vers la branche (`git push origin feature/nouveau-theme`)
+6. **Ouvrir une Pull Request**
 
-Pour enrichir la base de données, modifiez les fichiers JSON dans le dossier `public/` :
+## 🙏 Remerciements
 
-- `corporate.json` pour le jargon corporate
-- `layoff.json` pour les messages de licenciement
+- Inspiré par la richesse inépuisable du vocabulaire corporate mondial
+- Merci à tous les consultants qui nous ont appris l'art de la communication sophistiquée
+- Dédié à tous ceux qui ont déjà entendu parler de "synergie disruptive"
+
+---
 
 <div align="center">
 
 **Créé avec ❤️ et beaucoup de second degré**
+
+_"Architecture extensible pour un écosystème de génération de contenu scalable"_
 
 </div>
