@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "corporate_as_a_service",
+  "name": "api",
   "main": "src/index.ts",
   "compatibility_date": "2025-07-28"
   // "compatibility_flags": [
