@@ -12,6 +12,7 @@ Une API REST satirique qui génère du jargon corporate et des messages de licen
 - **📚 Collection complète**: Accès à toute la base de données de phrases
 
 ## 🌐 Endpoints
+https://api.corporate-as-a-service.workers.dev
 
 ### Corporate Speak
 
